@@ -3,7 +3,7 @@ directory="$ORACLE_HOME"/scripts/patch
 cd "$directory" || exit 1
 
 if [ "$1" == "update" ]; then
-  echo placeholder
+  wget https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patches.sh
 fi
 
 # Crea el archivo que contiene todos los patches por aplicar
