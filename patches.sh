@@ -1,9 +1,20 @@
 #!/bin/bash
-directory="$ORACLE_HOME"/scripts/patch
-cd "$directory" || exit 1
+
+dir=/home/oracle/scripts/patch
+cd "$dir" || exit 1
+
+if ! [ -f "$dir"/config.conf ]; then
+  echo "No se encontro el archivo de configuracion, edita config.conf"
+  touch config.conf
+  exit 1
+else 
+  source "$dir"/config.conf
+fi
 
 if [ "$1" == "update" ]; then
-  wget https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patches.sh
+  #wget -O patches.sh https://raw.githubusercontent.com/DM1-5/scripts/main/patches.sh
+  wget -O opatch_summary.sh https://raw.githubusercontent.com/wayneadamsconsulting/oracle-opatch_summary/refs/heads/master/opatch_summary.sh
+  chmod +x patches.sh
 fi
 
 # Crea el archivo que contiene todos los patches por aplicar
@@ -22,12 +33,12 @@ grep Important securityPatches.log > ImportantSecurityPatches.log
 numImp=$(grep -c '^' ImportantSecurityPatches.log)
 
 # Crea el archivo que contiene todos los parches aplicados
-"$ORACLE_HOME"/OPatch/opatch lsinventory > /home/oracle/oparches/opatch.log
+sh opatch_summary.sh > $dir/opatch.log
 
 # Envia el reporte
-mail -s "host: $(hostname) Reportes de parches de seguridad linux" -a "$directory/CriticalSecurityPatches.log" -a "$directory/ImportantSecurityPatches.log" -a "$directory/opatch.log" "$MAILTO" <<EOF
+mail -s "host: $(hostname) Reportes de parches de seguridad linux" -a "$dir/CriticalSecurityPatches.log" -a "$dir/ImportantSecurityPatches.log" -a "$dir/opatch.log" "$MAILTO" <<EOF
 $(date)
-
+$(head -n 1 $dir/opatch.log)
 Parches Criticos: $numCrit
 Parches Importantes: $numImp
 
