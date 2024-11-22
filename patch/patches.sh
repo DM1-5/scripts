@@ -36,11 +36,13 @@ numImp=$(grep -c '^' ImportantSecurityPatches.log)
 
 # Crea el archivo que contiene todos los parches aplicados
 sh opatch_summary.sh > $dir/Patches_de_Binarios_Oracle.log
+
 # Crea un reporte de todos los procesos Oracle corriendo en el servidor
-ps -ef | grep -v grep | grep pmon | awk '{print $8}' > pmon.log
+#ps -ef | grep -v grep | grep pmon | awk '{print $8}' > pmon.log
+pgrep -fl pmon | awk '{print $2}' > pmon.log
 
 # Envia el reporte
-mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle" -a "$dir/CriticalSecurityPatches.log" -a "$dir/ImportantSecurityPatches.log" -a "$dir/Patches_de_Binarios_Oracle.log" "$MAILTO" <<EOF
+mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle IP: $(hostname -I)" -a "$dir/CriticalSecurityPatches.log" -a "$dir/ImportantSecurityPatches.log" -a "$dir/Patches_de_Binarios_Oracle.log" "$MAILTO" <<EOF
 $(date)
 Linux Parches Criticos: $numCrit 
 Linux Parches Importantes: $numImp
