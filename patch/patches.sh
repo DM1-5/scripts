@@ -37,11 +37,9 @@ ps -ef | grep -v grep | grep pmon | awk '{print $8}' > pmon.log
 # Envia el reporte
 mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle" -a "$dir/CriticalSecurityPatches.log" -a "$dir/ImportantSecurityPatches.log" -a "$dir/Patches_de_Binarios_Oracle.log" "$MAILTO" <<EOF
 $(date)
-$(head -n 1 $dir/opatch.log)
-# Linux Parches Criticos: 
-$numCrit
-# Linux Parches Importantes: 
-$numImp
+$(head -n 1 $dir/Patches_de_Binarios_Oracle.log)
+# Linux Parches Criticos: $numCrit
+# Linux Parches Importantes: $numImp
 # Procesos Oracle-Pmon corriendo en el servidor:
 $(cat pmon.log)
 EOF
