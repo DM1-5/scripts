@@ -11,6 +11,7 @@ if [ "$1" == "update" ]; then
   wget -O opatch_summary.sh https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/opatch_summary.sh
   chmod +x patches.sh
   chmod +x opatch_summary.sh
+  exit 0
 fi
 
 # Crea el archivo que contiene todos los patches por aplicar
@@ -29,14 +30,20 @@ grep Important securityPatches.log > ImportantSecurityPatches.log
 numImp=$(grep -c '^' ImportantSecurityPatches.log)
 
 # Crea el archivo que contiene todos los parches aplicados
-sh opatch_summary.sh > $dir/opatch.log
+sh opatch_summary.sh > $dir/Patches_de_Binarios_Oracle.log
+
+ps -ef | grep -v grep | grep pmon | awk '{print $8}' > pmon.log
 
 # Envia el reporte
-mail -s "Cliente: $CLIENT Host: $(hostname) Reportes de parches de seguridad linux" -a "$dir/CriticalSecurityPatches.log" -a "$dir/ImportantSecurityPatches.log" -a "$dir/opatch.log" "$MAILTO" <<EOF
+mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle" -a "$dir/CriticalSecurityPatches.log" -a "$dir/ImportantSecurityPatches.log" -a "$dir/Patches_de_Binarios_Oracle.log" "$MAILTO" <<EOF
 $(date)
 $(head -n 1 $dir/opatch.log)
-Parches Criticos: $numCrit
-Parches Importantes: $numImp
+# Linux Parches Criticos: 
+$numCrit
+# Linux Parches Importantes: 
+$numImp
+# Procesos Oracle-Pmon corriendo en el servidor:
+$(cat pmon.log)
 EOF
 
 rm -f securityPatches.log CriticalSecurityPatches.log ImportantSecurityPatches.log opatch.log 
