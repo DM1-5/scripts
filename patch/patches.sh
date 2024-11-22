@@ -3,6 +3,7 @@
 dir=/home/oracle/scripts/patch
 cd "$dir" || exit 1
 
+# la definicion de MAILTO y CLIENT se encuentra en el archivo config.conf
 source /home/oracle/scripts/patch/config.conf
 
 if [ "$1" == "update" ]; then
@@ -31,11 +32,12 @@ numImp=$(grep -c '^' ImportantSecurityPatches.log)
 sh opatch_summary.sh > $dir/opatch.log
 
 # Envia el reporte
-mail -s "host: $(hostname) Reportes de parches de seguridad linux" -a "$dir/CriticalSecurityPatches.log" -a "$dir/ImportantSecurityPatches.log" -a "$dir/opatch.log" "$MAILTO" <<EOF
+mail -s "Cliente: $CLIENT Host: $(hostname) Reportes de parches de seguridad linux" -a "$dir/CriticalSecurityPatches.log" -a "$dir/ImportantSecurityPatches.log" -a "$dir/opatch.log" "$MAILTO" <<EOF
 $(date)
 $(head -n 1 $dir/opatch.log)
 Parches Criticos: $numCrit
 Parches Importantes: $numImp
 EOF
 
+rm -f securityPatches.log CriticalSecurityPatches.log ImportantSecurityPatches.log opatch.log 
 
