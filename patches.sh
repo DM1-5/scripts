@@ -3,17 +3,9 @@
 dir=/home/oracle/scripts/patch
 cd "$dir" || exit 1
 
-if ! [ -f "$dir"/config.conf ]; then
-  echo "No se encontro el archivo de configuracion, edita config.conf"
-  touch config.conf
-  exit 1
-else 
-  source "$dir"/config.conf
-fi
-
 if [ "$1" == "update" ]; then
-  #wget -O patches.sh https://raw.githubusercontent.com/DM1-5/scripts/main/patches.sh
-  wget -O opatch_summary.sh https://raw.githubusercontent.com/wayneadamsconsulting/oracle-opatch_summary/refs/heads/master/opatch_summary.sh
+  wget -O patches.sh https://raw.githubusercontent.com/DM1-5/scripts/main/patches.sh
+  #wget -O opatch_summary.sh https://raw.githubusercontent.com/wayneadamsconsulting/oracle-opatch_summary/refs/heads/master/opatch_summary.sh
   chmod +x patches.sh
 fi
 
