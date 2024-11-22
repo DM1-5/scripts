@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$(whoami)" != "oracle" ]; then
+  echo "Este script debe ser ejecutado por el usuario oracle"
+  exit 1
+fi
+
 # Variables
 SCRIPTS_DIR=/home/oracle/scripts
 INSTALL_DIR=$SCRIPTS_DIR/patch
