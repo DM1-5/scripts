@@ -6,9 +6,10 @@ cd "$dir" || exit 1
 source /home/oracle/scripts/patch/config.conf
 
 if [ "$1" == "update" ]; then
-  wget -O patches.sh https://raw.githubusercontent.com/DM1-5/scripts/main/patches.sh
-  #wget -O opatch_summary.sh https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/opatch_summary.sh
+  wget -O patches.sh https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/patches.sh
+  wget -O opatch_summary.sh https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/opatch_summary.sh
   chmod +x patches.sh
+  chmod +x opatch_summary.sh
 fi
 
 # Crea el archivo que contiene todos los patches por aplicar

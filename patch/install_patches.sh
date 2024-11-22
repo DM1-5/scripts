@@ -4,8 +4,8 @@
 SCRIPTS_DIR=/home/oracle/scripts
 INSTALL_DIR=$SCRIPTS_DIR/patch
 CONFIG_FILE=$INSTALL_DIR/config.conf
-PATCHES_URL=https://raw.githubusercontent.com/DM1-5/scripts/main/patches.sh
-OPATCH_SUMMARY_URL=https://raw.githubusercontent.com/wayneadamsconsulting/oracle-opatch_summary/refs/heads/master/opatch_summary.sh
+PATCHES_URL=https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/patches.sh
+OPATCH_SUMMARY_URL=https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/opatch_summary.sh
 
 if [ -d $SCRIPTS_DIR ]; then
   echo "El directorio $SCRIPTS_DIR ya existe"
@@ -28,4 +28,4 @@ chmod +x patches.sh
 wget -O opatch_summary.sh "$OPATCH_SUMMARY_URL"
 chmod +x opatch_summary.sh
 
-echo "Installation complete. Scripts have been downloaded to $INSTALL_DIR"
+echo "Instalacion completada. $INSTALL_DIR"
