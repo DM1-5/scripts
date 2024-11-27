@@ -9,7 +9,7 @@ fi
 SCRIPTS_DIR=/home/oracle/scripts
 INSTALL_DIR=$SCRIPTS_DIR/patch
 CONFIG_FILE=$INSTALL_DIR/config.conf
-PATCHES_URL=https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/patches.sh
+PATCHES_URL=https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/patches.sh 
 OPATCH_SUMMARY_URL=https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/opatch_summary.sh
 
 if [ -d $SCRIPTS_DIR ]; then
@@ -28,9 +28,9 @@ if ! [ -f "$CONFIG_FILE" ]; then
 fi
 
 echo "Descargando scripts..."
-wget -O patches.sh "$PATCHES_URL"
+wget -O patches.sh "$PATCHES_URL" --no-check-certificate
 chmod +x patches.sh
-wget -O opatch_summary.sh "$OPATCH_SUMMARY_URL"
+wget -O opatch_summary.sh "$OPATCH_SUMMARY_URL" --no-check-certificate
 chmod +x opatch_summary.sh
 
 echo "Instalacion completada. $INSTALL_DIR"
