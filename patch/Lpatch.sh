@@ -16,4 +16,4 @@ spreport Important
 # Envia el reporte
 mail -s "$(head -n 1 Lpatch.log)" -a "CriticalSecurityPatches.log" -a "ImportantSecurityPatches.log" "$CORREO" < Lpatch.log
 
-rm -f securityPatches.log CriticalSecurityPatches.log ImportantSecurityPatches.log Lpatch.log
+#rm -f securityPatches.log CriticalSecurityPatches.log ImportantSecurityPatches.log Lpatch.log
