@@ -1,10 +1,8 @@
 #!/bin/bash
 
-date > Lpatch.log
-echo "Cliente: $CLIENT" >> Lpatch.log
-echo "Host: $(hostname)" >> Lpatch.log
-echo "Reporte: Parches de seguridad linux" >> Lpatch.log
-echo "IP: $(hostname -I)" >> Lpatch.log
+
+echo "*Cliente:* $CLIENT *Host:* $(hostname) *Reporte:* Parches de seguridad linux IP: $(hostname -I)" > Lpatch.log
+date >> Lpatch.log
 yum updateinfo list security all > securityPatches.log
 
 spreport() {
@@ -16,17 +14,5 @@ spreport() {
 spreport Critical
 spreport Important
 
-# Filtra solo los parches criticos
-#grep Critical securityPatches.log > CriticalSecurityPatches.log
-
-# Cuenta el numero de parches criticos
-#numCrit=$(grep -c '^' CriticalSecurityPatches.log)
-
-# Filtra solo los parches Importantes
-#grep Important securityPatches.log > ImportantSecurityPatches.log
-
-# Cuenta el numero de parches Importantes
-#numImp=$(grep -c '^' ImportantSecurityPatches.log)
-
 # Envia el reporte
-mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux: $(hostname -I)" -a "CriticalSecurityPatches.log" -a "ImportantSecurityPatches.log" "$CORREO" < Lpatch.log
+mail -s "$(head -n 1 Lpatch.log)" -a "CriticalSecurityPatches.log" -a "ImportantSecurityPatches.log" "$CORREO" < Lpatch.log
