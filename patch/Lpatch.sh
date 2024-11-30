@@ -2,7 +2,7 @@
 
 echo "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux IP: $(hostname -I)" > Lpatch.log
 date >> Lpatch.log
-echo "Para ver los parches necesarios revisar la ruta ~/patch">> Lpatch.log
+echo "Para ver los todos los parches por categoria revisar la ruta ~/patch">> Lpatch.log
 yum updateinfo list security all > securityPatches.log
 
 spreport() {
@@ -13,6 +13,8 @@ spreport() {
 
 spreport Critical
 spreport Important
+spreport Moderate 
+spreport Low
 
 # Envia el reporte
 mail -s "$(head -n 1 Lpatch.log)" -a "CriticalSecurityPatches.log" -a "ImportantSecurityPatches.log" "$CORREO" < Lpatch.log
