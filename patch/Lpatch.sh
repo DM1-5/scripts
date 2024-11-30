@@ -1,12 +1,16 @@
 #!/bin/bash
 
 date > Lpatch.log
+echo "Cliente: $CLIENT" >> Lpatch.log
+echo "Host: $(hostname)" >> Lpatch.log
+echo "Reporte: Parches de seguridad linux" >> Lpatch.log
+echo "IP: $(hostname -I)" >> Lpatch.log
 yum updateinfo list security all > securityPatches.log
 
 spreport() {
   grep "$1" securityPatches.log > "$1"SecurityPatches.log
-  num=$(grep -c '^' CriticalSecurityPatches.log)
-  echo "Linux Parches $1: $num" >> Lpatch.log
+  num=$(grep -c '^' "$1"SecurityPatches.log)
+  echo "Linux Patch $1: $num" >> Lpatch.log
 }
 
 spreport Critical

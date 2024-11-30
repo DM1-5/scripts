@@ -12,8 +12,13 @@ cd "$dir" || exit 1
 source /home/oracle/scripts/patch/config.conf
 
 if [ "$1" == "update" ]; then
-  wget -O patches.sh https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/patches.sh 
-  wget -O opatch_summary.sh https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/opatch_summary.sh 
+  wget -O patches.sh https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/patches.sh --no-check-certificate
+  if [ $? -ne 0 ]; then
+    echo "Error al descargar el archivo patches.sh"
+    echo "wget esta instalado?"
+    exit 1
+  fi
+  wget -O opatch_summary.sh https://raw.githubusercontent.com/DM1-5/scripts/refs/heads/main/patch/opatch_summary.sh --no-check-certificate
   chmod +x patches.sh
   chmod +x opatch_summary.sh
   exit 0
@@ -38,18 +43,18 @@ numImp=$(grep -c '^' ImportantSecurityPatches.log)
 sh opatch_summary.sh > $dir/Patches_de_Binarios_Oracle.log
 
 # Crea un reporte de todos los procesos Oracle corriendo en el servidor
-#ps -ef | grep -v grep | grep pmon | awk '{print $8}' > pmon.log
-pgrep -fl pmon | awk '{print $2}' > pmon.log
+ps -ef | grep -v grep | grep pmon | awk '{print $8}' > pmon.log
+#pgrep -fl pmon | awk '{print $2}' > pmon.log
 
 # Envia el reporte
 mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle IP: $(hostname -I)" -a "$dir/CriticalSecurityPatches.log" -a "$dir/ImportantSecurityPatches.log" -a "$dir/Patches_de_Binarios_Oracle.log" "$MAILTO" <<EOF
 $(date)
-Linux Parches Criticos: $numCrit 
-Linux Parches Importantes: $numImp
+## Linux Parches Criticos: $numCrit 
+## Linux Parches Importantes: $numImp
 $(head -n 1 $dir/Patches_de_Binarios_Oracle.log)
-Procesos Oracle-Pmon corriendo en el servidor:
+## Procesos Oracle-Pmon corriendo en el servidor:
 $(cat pmon.log)
 EOF
 
-rm -f securityPatches.log CriticalSecurityPatches.log ImportantSecurityPatches.log Patches_de_Binarios_Oracle.log
+rm -f securityPatches.log CriticalSecurityPatches.log ImportantSecurityPatches.log Patches_de_Binarios_Oracle.log pmon.log
 
