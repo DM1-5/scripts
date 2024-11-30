@@ -2,6 +2,7 @@
 
 echo "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux IP: $(hostname -I)" > Lpatch.log
 date >> Lpatch.log
+echo "Para ver los parches necesarios revisar la ruta ~/patch">> Lpatch.log
 yum updateinfo list security all > securityPatches.log
 
 spreport() {
