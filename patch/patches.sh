@@ -40,7 +40,7 @@ grep Important securityPatches.log > ImportantSecurityPatches.log
 numImp=$(grep -c '^' ImportantSecurityPatches.log)
 
 # Crea el archivo que contiene todos los parches aplicados
-sh opatch_summary.sh > $dir/Patches_de_Binarios_Oracle.log
+sh opatch_summary.sh --csv > $dir/Patches_de_Binarios_Oracle.log
 
 # Crea un reporte de todos los procesos Oracle corriendo en el servidor
 ps -ef | grep -v grep | grep pmon | awk '{print $8}' > pmon.log
