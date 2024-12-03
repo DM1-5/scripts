@@ -30,18 +30,18 @@ if [ "$1" == "update" ]; then
 fi
 date > patches.log
 # Crea el archivo que contiene todos los patches por aplicar
-yum updateinfo list security all > securityPatches.csv
+yum updateinfo list security all > securityPatches.txt
 
 spreport() {
   # Filtra los parches segun el argumento
-  grep "$1" securityPatches.csv >> "$1"SecurityPatches.csv
+  grep "$1" securityPatches.txt >> "$1"SecurityPatches.txt
   # Filtra los parches no instalados
-  grep -v '^i' "$1"SecurityPatches.csv > NotInstalled"$1"SecurityPatches.csv
+  grep -v '^i' "$1"SecurityPatches.txt > NotInstalled"$1"SecurityPatches.txt
   # Cuenta los parches no instalados
-  num=$(grep -c '^' NotInstalled"$1"SecurityPatches.csv)
+  num=$(grep -c '^' NotInstalled"$1"SecurityPatches.txt)
   # Agrega el numero de parches no instalados al reporte
   echo "- Linux Patch $1: $num" >> patches.log
-  rm -f NotInstalled"$1"SecurityPatches.csv
+  rm -f NotInstalled"$1"SecurityPatches.txt
 }
 
 spreport Critical
@@ -59,7 +59,7 @@ echo "Procesos Oracle-Pmon corriendo en el servidor:" >> patches.log
 cat pmon.log >> patches.log
 
 # Envia el reporte
-mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle IP: $(hostname -I)" -a "$dir/CriticalSecurityPatches.csv" -a "$dir/ImportantSecurityPatches.csv" -a "$dir/Patches_de_Binarios_Oracle.csv" "$MAILTO" < patches.log
+mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle IP: $(hostname -I)" -a "$dir/CriticalSecurityPatches.txt" -a "$dir/ImportantSecurityPatches.txt" -a "$dir/Patches_de_Binarios_Oracle.csv" "$MAILTO" < patches.log
 
-rm -f securityPatches.csv CriticalSecurityPatches.csv ImportantSecurityPatches.csv Patches_de_Binarios_Oracle.csv pmon.log
+rm -f securityPatches.txt CriticalSecurityPatches.txt ImportantSecurityPatches.txt Patches_de_Binarios_Oracle.txt pmon.log
 
