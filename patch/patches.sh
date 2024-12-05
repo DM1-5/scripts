@@ -57,7 +57,7 @@ spreport Important "$importantPatches"
 
 # Crea el archivo que contiene todos los parches aplicados
 # headers
-echo 'Patch#|Applied_Date|Description' > $dir/Patches_de_Binarios_Oracle.csv
+echo 'Patch#,Applied_Date,Description' > $dir/"$opatchPatches"
 sh opatch_summary.sh --csv >> $dir/"$opatchPatches"
 #head -n 1 $dir/Patches_de_Binarios_Oracle.csv >> patches.log
 
