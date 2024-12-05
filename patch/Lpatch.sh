@@ -5,6 +5,9 @@ date >> Lpatch.log
 echo "Para ver los todos los parches por categoria revisar la ruta ~/patch">> Lpatch.log
 yum updateinfo list security all > securityPatches.txt
 
+criticalPatches="CSP($(hostname)).csv"
+importantPatches="ISP($(hostname)).csv"
+
 spreport() {
   # Filtra los parches segun el argumento
   grep "$1" securityPatches.txt >> "$1"SecurityPatches.txt
@@ -14,13 +17,18 @@ spreport() {
   num=$(grep -c '^' NotInstalled"$1"SecurityPatches.txt)
   # Agrega el numero de parches no instalados al reporte
   echo "- Linux Patch $1: $num" >> Lpatch.log
-  rm -f NotInstalled"$1"SecurityPatches.txt
+  # HEADERs
+  echo "PatchID, Severity, Description" > "$2"
+  awk '{print $1","$2","$3 }' NotInstalled"$1"SecurityPatches.txt >> "$2"
+  rm -f NotInstalled"$1"SecurityPatches.txt "$1""SecurityPatches.txt"
 }
 
-spreport Critical
-spreport Important
+spreport Critical "$criticalPatches"
+spreport Important "$importantPatches"
+
+subject=$(head -n 1 Lpatch.log)
 
 # Envia el reporte
-mail -s "$(head -n 1 Lpatch.log)" -a "CriticalSecurityPatches.txt" -a "ImportantSecurityPatches.txt" "$CORREO" < Lpatch.log
+mail -s "$subject" -a "$criticalPatches" -a "$criticalPatches" "$CORREO" < Lpatch.log
 
 #rm -f securityPatches.log CriticalSecurityPatches.log ImportantSecurityPatches.log Lpatch.log

@@ -37,7 +37,7 @@ if [[ ! -x $ORACLE_HOME/OPatch/opatch ]]; then
 fi
 
 # Output delimiter used when --csv is specified
-CSVDELIM="|"
+CSVDELIM=","
 
 OPATCH_INFO_LINE_PROC="false"
 IFS="|"
