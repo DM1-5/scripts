@@ -5,9 +5,9 @@ if [ "$(whoami)" != "oracle" ]; then
   exit 1
 fi
 
-criticalPatches="CSP($(hostname))"
-importantPatches="ISP($(hostname))"
-opatchPatches="Opatch($(hostname))"
+criticalPatches="CSP($(hostname)).csv"
+importantPatches="ISP($(hostname)).csv"
+opatchPatches="Opatch($(hostname)).csv"
 
 dir=/home/oracle/scripts/patch
 cd "$dir" || exit 1
@@ -47,8 +47,8 @@ spreport() {
   # Agrega el numero de parches no instalados al reporte
   echo "- Linux Patch $1: $num" >> patches.log
   # HEADERs
-  echo "ID, Severity, Description" > "$2"
-  awk '{print $1","$2","$3 }' NotInstalled"$1"SecurityPatches.log >> "$2"
+  echo "PatchID, Severity, Description" > "$2"
+  awk '{print $1","$2","$3 }' NotInstalled"$1"SecurityPatches.txt >> "$2"
   rm -f NotInstalled"$1"SecurityPatches.txt "$1""SecurityPatches.txt"
 }
 
@@ -57,7 +57,7 @@ spreport Important "$importantPatches"
 
 # Crea el archivo que contiene todos los parches aplicados
 # headers
-echo 'Patch#|Applied Date|Description' > $dir/Patches_de_Binarios_Oracle.csv
+echo 'Patch#|Applied_Date|Description' > $dir/Patches_de_Binarios_Oracle.csv
 sh opatch_summary.sh --csv >> $dir/"$opatchPatches"
 #head -n 1 $dir/Patches_de_Binarios_Oracle.csv >> patches.log
 
