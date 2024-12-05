@@ -8,6 +8,8 @@ yum updateinfo list security all > securityPatches.txt
 criticalPatches="CSP($(hostname)).csv"
 importantPatches="ISP($(hostname)).csv"
 
+IP=$(hostname -I | awk '{print $1}')
+
 spreport() {
   # Filtra los parches segun el argumento
   grep "$1" securityPatches.txt >> "$1"SecurityPatches.txt
@@ -26,9 +28,11 @@ spreport() {
 spreport Critical "$criticalPatches"
 spreport Important "$importantPatches"
 
+zip "$IP".zip "$criticalPatches" "$importantPatches"
+
 subject=$(head -n 1 Lpatch.log)
 
 # Envia el reporte
-mail -s "$subject" -a "$criticalPatches" -a "$criticalPatches" "$CORREO" < Lpatch.log
+mail -s "$subject" -a "$criticalPatches" -a "$criticalPatches" -a "$IP".zip "$CORREO" < Lpatch.log
 
 #rm -f securityPatches.log CriticalSecurityPatches.log ImportantSecurityPatches.log Lpatch.log
