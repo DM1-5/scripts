@@ -5,6 +5,10 @@ if [ "$(whoami)" != "oracle" ]; then
   exit 1
 fi
 
+criticalPatches="CSP($(hostname))"
+importantPatches="ISP($(hostname))"
+opatchPatches="Opatch($(hostname))"
+
 dir=/home/oracle/scripts/patch
 cd "$dir" || exit 1
 
@@ -24,10 +28,11 @@ if [ "$1" == "update" ]; then
     echo "wget esta instalado?"
     exit 1
   fi
-  chmod +x patches.sh
-  chmod +x opatch_summary.sh
+  chmod +x patches.sh 
+  chmod +x opatch_summary.sh 
   exit 0
 fi
+
 date > patches.log
 # Crea el archivo que contiene todos los patches por aplicar
 yum updateinfo list security all > securityPatches.txt
@@ -41,17 +46,20 @@ spreport() {
   num=$(grep -c '^' NotInstalled"$1"SecurityPatches.txt)
   # Agrega el numero de parches no instalados al reporte
   echo "- Linux Patch $1: $num" >> patches.log
-  rm -f NotInstalled"$1"SecurityPatches.txt
+  # HEADERs
+  echo "ID, Severity, Description" > "$2"
+  awk '{print $1","$2","$3 }' NotInstalled"$1"SecurityPatches.log >> "$2"
+  rm -f NotInstalled"$1"SecurityPatches.txt "$1""SecurityPatches.txt"
 }
 
-spreport Critical
-spreport Important
+spreport Critical "$criticalPatches"
+spreport Important "$importantPatches"
 
 # Crea el archivo que contiene todos los parches aplicados
 # headers
 echo 'Patch#|Applied Date|Description' > $dir/Patches_de_Binarios_Oracle.csv
-sh opatch_summary.sh --csv >> $dir/Patches_de_Binarios_Oracle.csv
-head -n 1 $dir/Patches_de_Binarios_Oracle.csv >> patches.log
+sh opatch_summary.sh --csv >> $dir/"$opatchPatches"
+#head -n 1 $dir/Patches_de_Binarios_Oracle.csv >> patches.log
 
 # Crea un reporte de todos los procesos Oracle corriendo en el servidor
 ps -ef | grep -v grep | grep pmon | awk '{print $8}' > pmon.log
@@ -59,7 +67,6 @@ echo "Procesos Oracle-Pmon corriendo en el servidor:" >> patches.log
 cat pmon.log >> patches.log
 
 # Envia el reporte
-mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle IP: $(hostname -I)" -a "$dir/CriticalSecurityPatches.txt" -a "$dir/ImportantSecurityPatches.txt" -a "$dir/Patches_de_Binarios_Oracle.csv" "$MAILTO" < patches.log
+mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle IP: $(hostname -I)" -a "$dir/$criticalPatches" -a "$dir/$importantPatches" -a "$dir/$opatchPatches" "$MAILTO" < patches.log
 
-rm -f securityPatches.txt CriticalSecurityPatches.txt ImportantSecurityPatches.txt Patches_de_Binarios_Oracle.txt pmon.log
 
