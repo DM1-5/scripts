@@ -21,6 +21,14 @@ cp /home/oracle/crontab.out /u01/orabackups/configuration/"$obj"/crontab
 cp -R "$ORACLE_HOME"/dbs/* /u01/orabackups/configuration/"$obj"/dbs
 cp -R "$ORACLE_HOME"/network/admin/* /u01/orabackups/configuration/"$obj"/network_admin
 cp -R /home/oracle/scripts/* /u01/orabackups/configuration/"$obj"/scripts
+
+if [ -d /opt/oracle/dcs/commonstore/wallets/tde/"$ORACLE_UNQNAME" ]; then
+  cp -R /opt/oracle/dcs/commonstore/wallets/tde/"$ORACLE_UNQNAME"/* /u01/orabackups/configuration/"$obj"/tde_wallet
+else 
+  echo "### Usando ruta alternativa de wallet ###"
+  cp -R /opt/oracle/dcs/commonstore/wallets/"$ORACLE_UNQNAME"/tde/* /u01/orabackups/configuration/"$obj"/tde_wallet
+fi
+
 cp -R /opt/oracle/dcs/commonstore/wallets/tde/"$ORACLE_UNQNAME"/* /u01/orabackups/configuration/"$obj"/tde_wallet
 cat /etc/hosts > /u01/orabackups/configuration/"$obj"/hosts/hosts_backup.bk
 
