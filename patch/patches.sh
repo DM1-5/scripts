@@ -8,6 +8,8 @@ fi
 criticalPatches="CSP($(hostname)).csv"
 importantPatches="ISP($(hostname)).csv"
 opatchPatches="Opatch($(hostname)).csv"
+IP=$(hostname -I | awk '{print $1}')
+
 
 dir=/home/oracle/scripts/patch
 cd "$dir" || exit 1
@@ -66,7 +68,9 @@ ps -ef | grep -v grep | grep pmon | awk '{print $8}' > pmon.log
 echo "Procesos Oracle-Pmon corriendo en el servidor:" >> patches.log
 cat pmon.log >> patches.log
 
+zip "$IP".zip "$criticalPatches" "$importantPatches""$opatchPatches" 
+
 # Envia el reporte
-mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle IP: $(hostname -I)" -a "$dir/$criticalPatches" -a "$dir/$importantPatches" -a "$dir/$opatchPatches" "$MAILTO" < patches.log
+mail -s "Cliente: $CLIENT Host: $(hostname) Reporte: Parches de seguridad linux y Oracle IP: $IP" -a "$dir/$criticalPatches" -a "$dir/$importantPatches" -a "$dir/$opatchPatches" "$MAILTO" < patches.log
 
 
