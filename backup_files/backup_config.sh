@@ -29,7 +29,6 @@ else
   cp -R /opt/oracle/dcs/commonstore/wallets/"$ORACLE_UNQNAME"/tde/* /u01/orabackups/configuration/"$obj"/tde_wallet
 fi
 
-cp -R /opt/oracle/dcs/commonstore/wallets/tde/"$ORACLE_UNQNAME"/* /u01/orabackups/configuration/"$obj"/tde_wallet
 cat /etc/hosts > /u01/orabackups/configuration/"$obj"/hosts/hosts_backup.bk
 
 ## Compresion de archivos
@@ -39,6 +38,12 @@ tar -czf $bkpdir/"$backup_name" "$obj"
 ## Subida al bucket 
 echo "Subiendo el archivo comprimido al Bucket..."
 ~/bin/oci os object put -ns surapanama -bn "$bucket_name" --file $bkpdir/"$backup_name" --name "$obj"/"$backup_name" 
+
+if [ $? -eq 0 ]; then
+  echo "El archivo se subio correctamente al Bucket"
+else
+  echo "Error al subir el archivo al Bucket"
+fi
 
 ## Eliminacion de archivos
 rm -rf /u01/orabackups/configuration/"$obj"
