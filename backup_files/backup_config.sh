@@ -27,3 +27,4 @@ echo "Subiendo el archivo comprimido al Bucket..."
 ~/bin/oci os object put -ns surapanama -bn "$bucket_name" --file $bkpdir/"$backup_name" --name "$obj"/"$backup_name" 
 
 rm -rf /u01/orabackups/configuration/"$obj"
+rm -rf /u01/orabackups/configuration/"$backup_name"
