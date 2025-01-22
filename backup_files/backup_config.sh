@@ -39,12 +39,6 @@ tar -czf $bkpdir/"$backup_name" "$obj"
 echo "Subiendo el archivo comprimido al Bucket..."
 ~/bin/oci os object put -ns surapanama -bn "$bucket_name" --file $bkpdir/"$backup_name" --name "$obj"/"$backup_name" 
 
-if [ $? -eq 0 ]; then
-  echo "El archivo se subio correctamente al Bucket"
-else
-  echo "Error al subir el archivo al Bucket"
-fi
-
 ## Eliminacion de archivos
 rm -rf /u01/orabackups/configuration/"$obj"
 rm -rf /u01/orabackups/configuration/"$backup_name"
